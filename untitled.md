@@ -78,3 +78,76 @@ Revision History
 |              | addQuestion                                                                                                                                                                                                                                      |                                                                                                                                                                                                                                                    |
 | 05/June/2018 | Add following endpoints: addOrUpdateLead addOrUpdateOpportunity convertLeadToOpportunity                                                                                                                                                         | *addOrUpdateLead* [addOrUpdateOpportunity](#addorupdateopportunity) [convertLeadToOpportunity](#convertleadtoopportunity)                                                                                                                          |
 
+Introduction
+============
+
+The iVvy system is built with flexibility in mind, and this API forms a large
+part of that promise.
+
+The API described in this document follows an RPC (Remote Procedure Call)
+paradigm. Each RPC method is grouped into a few higher level namespaces to help
+organise this document in a more logical manner.
+
+iVvy takes security very seriously and the API described in this document has
+been designed to be as secure as possible.
+
+-   All transport has been secured by utilising industry standard TLS
+
+-   Key generation can be done first authenticating with the iVvy backend system
+
+-   All requests must be signed using the key/secret pair to prove the request
+    was made by a valid key
+
+-   All requests have a time limit to avoid future replay attacks
+
+Obtaining Keys
+==============
+
+Keys are defined as a pair of strings, the ‘key’ and the ‘secret’. Each request
+must be signed using a ‘secret’ key. There are generated from within the
+accounts ‘settings’ section of the website.
+
+Creating the request
+====================
+
+Requests to the API are over the standard HTTP (HyperText Transfer Protocol).
+The protocol defines three parts to every request
+
+1.  the method/uri header
+
+2.  a number of request headers
+
+3.  optional body of the request
+
+Note also that the HTTP request also needs to be secured by a TLS/SSL
+connection, often referred to as HTTPS (or HTTP over SSL). iVvy uses industry
+standard TLS (Transport Layer Security, the successor to SSL, Secure Sockets
+Layer) to secure the HTTP transport to the API to ensure eavesdropping on the
+connection by third parties is protected.
+
+Method/URI Header
+-----------------
+
+This is a line consisting of the method of the request, followed by the request
+URI, followed by the HTTP version. i.e.
+
+>   POST /api/1.0/event?action=getEventList HTTP/1.0
+
+This example is for a request, to iVvy’s api ‘event’ namespace, calling the
+‘getEventList’ API call, using HTTP version 1.0. Note the HTTP method for calls
+to the iVvy API are all POST requests. The api version being called is 1.0.
+Currently supported versions are:
+
+-   1.0
+
+The URI in the request must always start with /api/{version} (where {version} is
+the specific api version, e.g. 1.0) followed by the namespace of the eventual
+api call to make. All requests must also provide the action parameter indicating
+the API call to invoke.
+
+Request Headers
+---------------
+
+Request headers are defined by the header name, followed by a colon (:) followed
+by a space, followed by the value of the header. A number of headers are used
+with the iVvy API
